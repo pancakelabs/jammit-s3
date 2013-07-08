@@ -109,8 +109,9 @@ module Jammit
       # find or create the bucket
       begin
         s3_service.buckets.find(@bucket_name)
+        raise "The bucket/path #{@bucket_name} already exists. Check /config/settings/application.rb to ensure you've updated the base_css_version and base_js_version."
       rescue S3::Error::NoSuchBucket
-        log "Bucket not found. Creating '#{@bucket_name}'..."
+        log "Creating bucket '#{@bucket_name}'..."
         bucket = s3_service.buckets.build(@bucket_name)
 
         location = (@bucket_location.to_s.strip.downcase == "eu") ? :eu : :us
