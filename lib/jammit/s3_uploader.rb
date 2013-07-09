@@ -28,21 +28,20 @@ module Jammit
 
       # upload all the globs
       s3_upload_files.each do |file|
-        upload_to_s3(file)
+        send_to_s3(file)
       end
     end
 
-    def upload_to_s3(file)
+    def send_to_s3(file)
       log "Starting upload of '#{file.src}' to '#{file.dest}'"
-      remote_path = local_path.gsub(/^#{ASSET_ROOT}\/public\//, "")
       
       # check if the file already exists on s3
-      obj = @bucket.objects.find_first(remote_path) rescue nil
+      obj = @bucket.objects.find_first(file.dest) rescue nil
 
       # if the object does not exist, or if the MD5 Hash / etag of the 
       # file has changed, upload it
       if obj
-        log "File not uploaded - already exists: #{remote_path}"
+        log "File not uploaded - already exists: #{file.dest}"
       else
         # save to s3
         new_object = @bucket.objects.build(file.dest)
