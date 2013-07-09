@@ -34,7 +34,6 @@ module Jammit
 
     def upload_to_s3(file)
       log "Starting upload of '#{file.src}' to '#{file.dest}'"
-      next if File.directory?(file.src)
       remote_path = local_path.gsub(/^#{ASSET_ROOT}\/public\//, "")
       
       # check if the file already exists on s3
