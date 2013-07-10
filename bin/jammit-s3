@@ -1,11 +1,4 @@
 #!/usr/bin/env ruby
 require 'jammit-s3'
-require "#{Dir.pwd}/vendor/plugins/simpleconfig/lib/simple_config"
-
-SimpleConfig.for :application do
-  load File.join(Dir.pwd, "config", "settings", "application.rb"),   :if_exists? => true
-  load File.join(Dir.pwd, "config", "settings", "#{ENV['RAILS_ENV']}.rb"),  :if_exists? => true
-  load File.join(Dir.pwd, "config", "settings", "local.rb"),         :if_exists? => true
-end
 
 Jammit::S3CommandLine.new
