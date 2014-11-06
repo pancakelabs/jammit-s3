@@ -44,7 +44,8 @@ module Jammit
         # save to s3
         new_object = @bucket.objects.build(file["dest"])
         new_object.cache_control = @cache_control if @cache_control
-        new_object.content_type = MimeMagic.by_path(file["dest"])
+        new_object.content_encoding = 'gzip' if File.extname(file["dest"]) == '.gz'
+        new_object.content_type = MimeMagic.by_path(file["dest"].gsub(/\.gz$/, ''))
         new_object.content = open(file["src"])
         new_object.acl = @acl if @acl
         log "Uploading '#{file["src"]}' to '#{file["dest"]}'"
