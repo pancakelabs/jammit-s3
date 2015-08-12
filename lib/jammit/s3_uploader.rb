@@ -32,11 +32,11 @@ module Jammit
       end
     end
 
-    def send_to_s3(file)   
+    def send_to_s3(file)
       # check if the file already exists on s3
       obj = @bucket.objects.find_first(file["dest"]) rescue nil
 
-      # if the object does not exist, or if the MD5 Hash / etag of the 
+      # if the object does not exist, or if the MD5 Hash / etag of the
       # file has changed, upload it
       if obj
         log "File not uploaded - already exists: #{file["dest"]}, are you sure you updated base_css_version and base_js_version?"
@@ -44,17 +44,17 @@ module Jammit
         # save to s3
         new_object = @bucket.objects.build(file["dest"])
         new_object.cache_control = @cache_control if @cache_control
-        new_object.content_encoding = 'gzip' if File.extname(file["dest"]) == '.gz'
+        new_object.content_encoding = 'gzip' if File.extname(file["src"]) == '.gz'
         new_object.content_type = MimeMagic.by_path(file["dest"].gsub(/\.gz$/, ''))
         new_object.content = open(file["src"])
         new_object.acl = @acl if @acl
         log "Uploading '#{file["src"]}' to '#{file["dest"]}'"
-        new_object.save          
+        new_object.save
       end
     end
 
     def find_or_create_bucket
-      s3_service = S3::Service.new(:access_key_id => @access_key_id, 
+      s3_service = S3::Service.new(:access_key_id => @access_key_id,
                                    :secret_access_key => @secret_access_key)
 
       # find or create the bucket
